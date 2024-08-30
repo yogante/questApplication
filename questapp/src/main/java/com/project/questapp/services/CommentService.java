@@ -28,9 +28,7 @@ public class CommentService {
 	}
 	
 	public List<Comment> getAllCommentsWithParam
-	(@RequestParam Optional<Long>userId, 
-	@RequestParam Optional<Long>postId
-	){
+	(Optional<Long>userId, Optional<Long>postId){
 		if(userId.isPresent() && postId.isPresent()) {
 			return commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
 		} else if (userId.isPresent()) {
@@ -41,7 +39,7 @@ public class CommentService {
 		return commentRepository.findAll();	
 	}
 	
-	public Comment getOneCommentById(@PathVariable Long commentId) {
+	public Comment getOneCommentById(Long commentId) {
 		return commentRepository.findById(commentId).orElse(null);
 	}
 
