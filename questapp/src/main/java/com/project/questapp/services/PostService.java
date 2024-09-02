@@ -2,7 +2,11 @@ package com.project.questapp.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.project.questapp.responses.PostResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.project.questapp.entities.Post;
@@ -13,6 +17,7 @@ import com.project.questapp.requests.PostUpdateRequest;
 
 @Service
 public class PostService {
+	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 	private PostRepository postRepository;
 	private UserService userService;
 	public PostService(PostRepository postRepository, UserService userService) {
@@ -20,11 +25,16 @@ public class PostService {
 		this.userService = userService;
 	}
 
-	public List<Post> getAllPosts(Optional<Long> userId) {
+	public List<PostResponse> getAllPosts(Optional<Long> userId) {
+		List<Post> list;
+
 		if(userId.isPresent()) {
-			return postRepository.findByUserId(userId.get());
+			list = postRepository.findByUserId(userId.get());
+		} else{
+			list = postRepository.findAll();
 		}
-		return null;
+		return list.stream().map(p ->{return new PostResponse(p);
+		}).collect(Collectors.toList());
 	}
 
 	public Post getOnePostById(Long postId) {

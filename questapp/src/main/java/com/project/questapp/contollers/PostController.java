@@ -3,6 +3,7 @@ package com.project.questapp.contollers;
 import java.util.List;
 import java.util.Optional;
 
+import com.project.questapp.responses.PostResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,8 @@ public class PostController {
 		this.postService = postService;
 	}
 
-	@GetMapping
-	public List<Post> getAllPosts(@RequestParam Optional<Long> userId){
+	@GetMapping("/all")
+	public List<PostResponse> getAllPosts(@RequestParam Optional<Long> userId){
 		return postService.getAllPosts(userId);
 	}
 
