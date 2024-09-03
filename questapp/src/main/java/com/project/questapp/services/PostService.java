@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.project.questapp.entities.Like;
+import com.project.questapp.responses.LikeResponse;
 import com.project.questapp.responses.PostResponse;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.questapp.entities.Post;
@@ -17,12 +21,19 @@ import com.project.questapp.requests.PostUpdateRequest;
 
 @Service
 public class PostService {
-	private static final Logger log = LoggerFactory.getLogger(PostService.class);
+
 	private PostRepository postRepository;
+	private LikeService likeService;
 	private UserService userService;
+
 	public PostService(PostRepository postRepository, UserService userService) {
 		this.postRepository = postRepository;
 		this.userService = userService;
+	}
+
+	@Autowired
+	public void setLikeService(LikeService likeService) {
+		this.likeService = likeService;
 	}
 
 	public List<PostResponse> getAllPosts(Optional<Long> userId) {
@@ -33,7 +44,9 @@ public class PostService {
 		} else{
 			list = postRepository.findAll();
 		}
-		return list.stream().map(p ->{return new PostResponse(p);
+		return list.stream().map(p ->{
+			List<LikeResponse> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null),Optional.of(p.getId()));
+			return new PostResponse(p, likes);
 		}).collect(Collectors.toList());
 	}
 

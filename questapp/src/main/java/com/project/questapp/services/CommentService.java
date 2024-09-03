@@ -20,8 +20,8 @@ public class CommentService {
 	private UserService userService;
 	private PostService postService;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, PostService postService) {
-		super();
+	public CommentService(CommentRepository commentRepository,
+						  UserService userService, PostService postService) {
 		this.commentRepository = commentRepository;
 		this.userService = userService;
 		this.postService = postService;
