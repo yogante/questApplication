@@ -102,10 +102,9 @@ const Post = (props) => {
 
   const deleteLike = ()=>{
     console.log(likeId);
-    fetch("/likes"+likeId,
+    fetch("/likes/"+likeId,
       {method:"DELETE"}
     )
-    .then((res)=>res.json())
     .catch((err)=> console.log(err))
   }
    
