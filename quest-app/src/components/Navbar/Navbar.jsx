@@ -17,6 +17,7 @@ const Navbar = () => {
   const onClick = ()=>{
     localStorage.removeItem("tokenKey")
     localStorage.removeItem("currentUser")
+    localStorage.removeItem("trfreshKey")
     localStorage.removeItem("userName")
     navigate(0)
   }

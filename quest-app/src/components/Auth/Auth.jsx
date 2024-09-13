@@ -49,6 +49,7 @@ const Auth = () => {
     })
     .then((result)=> {
                      localStorage.setItem("tokenKey", result.message);
+                     localStorage.setItem("refreshkey", result.refreshToken)
                      localStorage.setItem("currentUser", result.userId);
                      localStorage.setItem("userName", username);
                     console.log(result);

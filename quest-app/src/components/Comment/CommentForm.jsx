@@ -1,10 +1,22 @@
 import React, { useState } from 'react'
 import { CardContent, OutlinedInput, Link, Avatar, InputAdornment, Button } from '@mui/material';
-import { PostWithAuth } from '../../services/HttpService';
+import { PostWithAuth, RefreshToken } from '../../services/HttpService';
+import {useNavigate} from 'react-router-dom';
+
 
 const CommentForm = (props) => {
 const{userId, userName, postId, setCommentRefresh} =props;
 const [text, setText] = useState("")
+let navigate = useNavigate();
+
+const logout =()=>{
+  localStorage.removeItem("tokenKey")
+  localStorage.removeItem("currentUser")
+  localStorage.removeItem("trfreshKey")
+  localStorage.removeItem("userName")
+  navigate(0)
+}
+
 
 const saveComment = ()=>{
   PostWithAuth("/comments",{
@@ -12,8 +24,24 @@ const saveComment = ()=>{
     userId:userId,
     text:text,
   })
-.then((res)=>res.json())
-.catch((err)=> console.log(err))
+  .then((res)=>res.json())
+  .catch((err)=> {
+    if(err == "Unauthorized"){
+      RefreshToken()
+      .then((res) => res.json())
+      .then((result)=> {
+        console.log(result);
+        localStorage.setItem("tokenKey", result.message);
+      })
+      .catch((err)=>{
+        if(err == "Unauthorized"){
+            logout()
+        } else if(err == null){
+          saveComment()
+        }
+      });
+    }
+  })
 }
 
 const handleSubmit=()=>{
