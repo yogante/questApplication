@@ -1,8 +1,10 @@
 package com.project.questapp.contollers;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import com.project.questapp.responses.UserResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,8 +38,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}")
-	public User  getOneUser(@PathVariable long userId) {
-		return userService.getOneUserById(userId);
+	public UserResponse getOneUser(@PathVariable long userId) {
+		return new UserResponse(userService.getOneUserById(userId));
 	}
 
 	@PutMapping("/{userId}")
@@ -48,5 +50,10 @@ public class UserController {
 	@DeleteMapping("/{userId}")
 	public void deleteOneUser(@PathVariable long userId) {
 		userService.deleteById(userId);		
+	}
+
+	@GetMapping("/activity/{userId}")
+	public List<Object> getUserActivity(@PathVariable Long userId){
+		return userService.getUserActivity(userId);
 	}
 }

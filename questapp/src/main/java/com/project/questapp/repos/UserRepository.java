@@ -6,6 +6,5 @@ import com.project.questapp.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
 
-
     User findByUserName(String username);
 }

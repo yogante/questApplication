@@ -8,16 +8,27 @@ const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const[postList, setPostList]= useState([]);
   
-  const refreshPosts=()=>{
+  const refreshPosts= ()=>{
     fetch("/posts/all")
     .then(res => res.json())
+    // .then((res) => {
+    //   // Content-TypeがJSONか確認する
+    //   if (res.headers.get("Content-Type").includes("application/json")) {
+    //     console.log(res);
+        
+    //     return res.json();
+    //   } else {
+    //     throw new Error("Received non-JSON response");
+    //   }
+    // })
     .then(
       (result) =>{
         setIsLoaded(true);
-        setPostList(result)
+        setPostList(result);
         
       },
       (error)=>{
+        
         setIsLoaded(true);
         setError(error);
       })
@@ -26,10 +37,13 @@ const Home = () => {
 
   useEffect(()=>{
     refreshPosts()
-  },[postList])
+  },[])
   
   if (error) {
-    return <div> error !!!</div>
+    return <div> error desuyo!!!
+       <p>{localStorage.getItem("tokenKey")}</p>
+    </div>
+   
   } else if (!isLoaded){
     return <div>Loading !!!</div>
 
@@ -43,11 +57,15 @@ const Home = () => {
         alignItems:'center',
         backgroundColor:'#f0f5ff'
         }}>
-          <PostForm
-          userId= {1}
-          userName={"nnome"}
+          {localStorage.getItem("currentUser") == null ? "" 
+          : <PostForm
+          userId= {localStorage.getItem("currentUser")}
+          userName={localStorage.getItem("username")}
           refreshPosts = {refreshPosts}
          />
+         
+        }
+          
         {postList.map(post =>(
           <Post 
           likes={post.postLikes}

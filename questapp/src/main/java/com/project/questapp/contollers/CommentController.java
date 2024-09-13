@@ -4,6 +4,7 @@ package com.project.questapp.contollers;
 import java.util.List;
 import java.util.Optional;
 
+import com.project.questapp.responses.CommentResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,8 @@ public class CommentController {
 	}
 	
 	@GetMapping
-	public List<Comment> getAllComments(@RequestParam Optional<Long>userId, 
-			@RequestParam Optional<Long>postId
+	public List<CommentResponse> getAllComments(@RequestParam Optional<Long>userId,
+												@RequestParam Optional<Long>postId
 			){
 		return commentService.getAllCommentsWithParam(userId, postId);
 	}

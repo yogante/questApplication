@@ -1,32 +1,29 @@
 import React, { useState } from 'react'
 import { CardContent, OutlinedInput, Link, Avatar, InputAdornment, Button } from '@mui/material';
+import { PostWithAuth } from '../../services/HttpService';
 
 const CommentForm = (props) => {
-const{userId, userName, postId} =props;
+const{userId, userName, postId, setCommentRefresh} =props;
 const [text, setText] = useState("")
 
 const saveComment = ()=>{
-  fetch("/comments",
-    {method:"POST",
-    headers:{
-      "Content-Type": "application/json",
-    },
-    body:JSON.stringify({
-      postId:postId,
-      userId:userId,
-      text:text,
-    }),
-})
+  PostWithAuth("/comments",{
+    postId:postId,
+    userId:userId,
+    text:text,
+  })
 .then((res)=>res.json())
-.catch((err)=> console.log("error desuuu"))
+.catch((err)=> console.log(err))
+}
+
+const handleSubmit=()=>{
+  saveComment();
+  setText("");
+  setCommentRefresh();
 }
 
 const handleChange= (value)=>{
   setText(value);
-}
-const handleSubmit=()=>{
-  saveComment();
-  setText("");
 }
 
   return (

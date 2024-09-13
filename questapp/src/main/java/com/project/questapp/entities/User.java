@@ -21,7 +21,7 @@ public class User {
     
     String userName;
     String password;
-    
+    int avatar;
     
 	public Long getId() {
 		return id;
@@ -41,4 +41,6 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public int getAvatar(){return avatar;}
+	public void setAvatar(int avatar){this.avatar = avatar;}
 }

@@ -11,6 +11,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import { InputAdornment, Alert } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
+import { PostWithAuth } from '../../services/HttpService';
 
 // const ExpandMore = styled((props) => {
 //   const { expand, ...other } = props;
@@ -41,19 +42,13 @@ const PostForm = (props) => {
   const [isSent, setIsSent]= useState(false);
   
   const savePost = ()=>{
-    fetch("/posts",
-      {method:"POST",
-      headers:{
-        "Content-Type": "application/json",
-      },
-      body:JSON.stringify({
-        userId:userId,
-        title:title,
-        text:text,
-      }),
-  })
+    PostWithAuth("/posts",{
+      userId:userId,
+      title:title,
+      text:text,
+    })
   .then((res)=>res.json())
-  .catch((err)=> console.log("error desuuu"))
+  .catch((err)=> console.log(err))
   }
 
 

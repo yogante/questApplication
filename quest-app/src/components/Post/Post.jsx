@@ -13,6 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Container, Card } from '@mui/material';
 import CommentForm from '../Comment/CommentForm';
+import  { PostWithAuth, DeleteWithAuth } from '../../services/HttpService'; 
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -45,7 +46,7 @@ const Post = (props) => {
 
   const [refresh, setRefresh] =useState(false);
   const [likeId, setLikeId] = useState(null);
-  let disabled =false;
+  let disabled  = localStorage.getItem("currentUser") == null ? true: false;
 
   const setCommentRefresh=()=>{
     setRefresh(true);
@@ -82,37 +83,31 @@ const Post = (props) => {
         setIsLoaded(true);
         setError(error);
       })
-
+      setRefresh(false);
   }
 
   const saveLike = ()=>{
-    fetch("/likes",
-      {method:"POST",
-      headers:{
-        "Content-Type": "application/json",
-      },
-      body:JSON.stringify({
-        postId:postId,
-        userId:userId,
-      }),
-  })
+    PostWithAuth("/likes", {
+      postId:postId,
+        userId:localStorage.getItem("currentUser"),
+    })
     .then((res)=>res.json())
     .catch((err)=> console.log(err))
+
   }
+   
+  
 
   const deleteLike = ()=>{
     console.log(likeId);
-    fetch("/likes/"+likeId,
-      {method:"DELETE"}
-    )
+    DeleteWithAuth("/likes/"+likeId)
     .catch((err)=> console.log(err))
   }
    
   const checkLikes = () =>{
-    var likeControl= likes.find((like => like.userId === userId));
+    var likeControl= likes.find((like => "" + like.userId === localStorage.getItem("currentUser")));
     if (likeControl!=null) {
       setLikeId(likeControl.id);
-      
       setIsLiked(true);
     }
   }
@@ -121,13 +116,9 @@ const Post = (props) => {
     if (isInitialMount.current) {
       isInitialMount.current=false;
     }
-    else{
+    else
       refreshComments();
-    }
-  },[commentList])
-  
-
-
+  },[refresh])
 
   useEffect(() => {checkLikes()}, [])
 
@@ -163,7 +154,7 @@ const Post = (props) => {
         onClick={handleLike}
         aria-label="add to favorites">
           <FavoriteIcon style ={ isLiked? {color:'red'} :null } />
-        </IconButton>:
+        </IconButton>   :
         <IconButton
         onClick={handleLike}
         aria-label="add to favourites"
@@ -189,9 +180,14 @@ const Post = (props) => {
         <Container>
            {error? "error" :
                     isLoaded? commentList.map(comment => (
-                      <Comment userId = {1} userName = {"useruser"} text = {comment.text}></Comment>
+                      <Comment userId = {comment.userId} userName = {comment.userName} text = {comment.text}></Comment>
                     )) : "Loading"}
-                    <CommentForm userId = {1} userName = {"useruser"} postId = {postId} setCommentRefresh={setCommentRefresh}></CommentForm>
+                    {disabled ? "" :
+                    <CommentForm userId = {localStorage.getItem("currentUser")} 
+                    userName = {localStorage.getItem("userName")} 
+                    postId = {postId} 
+                    setCommentRefresh={setCommentRefresh}
+                    ></CommentForm>}
         </Container>
       </Collapse>
     </Card>

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "post")
 @Data
@@ -26,7 +28,9 @@ public class Post {
 	@Lob
 	@Column(columnDefinition="text")
 	String text;
-	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	Date createDate;
 	
 	public Long getId() {
 		return id;
@@ -52,5 +56,6 @@ public class Post {
 	public void setText(String text) {
 		this.text = text;
 	}
-
+	public Date getCreateDate() {return createDate;}
+	public void setCreateDate(Date createDate) {this.createDate = createDate;}
 }

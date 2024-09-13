@@ -1,8 +1,11 @@
 package com.project.questapp.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.project.questapp.responses.CommentResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,16 +30,23 @@ public class CommentService {
 		this.postService = postService;
 	}
 	
-	public List<Comment> getAllCommentsWithParam
+	public List<CommentResponse> getAllCommentsWithParam
 	(Optional<Long>userId, Optional<Long>postId){
+		List<Comment> comments;
 		if(userId.isPresent() && postId.isPresent()) {
-			return commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
+			comments= commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
 		} else if (userId.isPresent()) {
-			return commentRepository.findByUserId(userId.get());
+			comments= commentRepository.findByUserId(userId.get());
 		} else if(postId.isPresent()) {
-			return commentRepository.findByPostId(postId.get());
-		}
-		return commentRepository.findAll();	
+			comments = commentRepository.findByPostId(postId.get());
+		} else
+		comments = commentRepository.findAll();
+
+		return comments.stream().map(comment ->
+				new CommentResponse(comment)).collect(Collectors.toList());
+
+
+
 	}
 	
 	public Comment getOneCommentById(Long commentId) {
@@ -52,6 +62,7 @@ public class CommentService {
 			commentToSave.setPost(post);
 			commentToSave.setUser(user);
 			commentToSave.setText(request.getText());
+			commentToSave.setCreateDate(new Date());
 			return commentRepository.save(commentToSave);
 		}else 
 		return null;
