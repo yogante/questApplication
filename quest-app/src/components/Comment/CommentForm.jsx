@@ -24,22 +24,28 @@ const saveComment = ()=>{
     userId:userId,
     text:text,
   })
-  .then((res)=>res.json())
+  .then((res)=> {
+    if (!res.ok){
+      RefreshToken()
+      .then((res) => {if(!res.ok){
+        logout()
+      } else {
+        res.json()
+      }})
+      .then((result)=> {
+        if(result != undefined){
+          localStorage.setItem("tokenKey", result.message);
+          saveComment()
+        }})
+      .catch((err)=>{
+        console.log(err)
+      });
+    } else 
+    res.json()
+  })
   .catch((err)=> {
     if(err == "Unauthorized"){
-      RefreshToken()
-      .then((res) => res.json())
-      .then((result)=> {
-        console.log(result);
-        localStorage.setItem("tokenKey", result.message);
-      })
-      .catch((err)=>{
-        if(err == "Unauthorized"){
-            logout()
-        } else if(err == null){
-          saveComment()
-        }
-      });
+      
     }
   })
 }

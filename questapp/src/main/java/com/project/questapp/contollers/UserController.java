@@ -59,6 +59,6 @@ public class UserController {
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public void handleUserNotFound(){
-		
+
 	}
 }
