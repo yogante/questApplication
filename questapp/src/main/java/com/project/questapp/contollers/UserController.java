@@ -14,6 +14,7 @@ import com.project.questapp.repos.UserRepository;
 import com.project.questapp.services.UserService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 public class UserController {
 	private UserService userService;

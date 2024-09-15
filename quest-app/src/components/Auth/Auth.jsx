@@ -36,17 +36,17 @@ const Auth = () => {
     //   userName:username,
     //   password:password
     // })
-    //.then((res)=>res.json())
-    .then((res) => {
-      // Content-TypeがJSONか確認する
-      if (res.headers.get("Content-Type").includes("application/json")) {
-        console.log(res);
+    .then((res)=>res.json())
+    // .then((res) => {
+    //   // Content-TypeがJSONか確認する
+    //   if (res.headers.get("Content-Type").includes("application/json")) {
+    //     console.log(res);
         
-        return res.json();
-      } else {
-        throw new Error("Received non-JSON response");
-      }
-    })
+    //     return res.json();
+    //   } else {
+    //     throw new Error("Received non-JSON response");
+    //   }
+    // })
     .then((result)=> {
                      localStorage.setItem("tokenKey", result.message);
                      localStorage.setItem("refreshkey", result.refreshToken)
